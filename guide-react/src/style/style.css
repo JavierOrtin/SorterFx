@@ -97,7 +97,7 @@ dt, p.note-title {
   font-weight: 600;
 }
 
-dd, p.note {
+dd, div.note > div {
   color: var(--text-muted);
   border-left: 2px solid var(--green-deep);
   padding-left: 0.75rem;
@@ -114,7 +114,7 @@ section:last-of-type {
 }
 
 /* Images & guides */
-figure {
+figure, .section-index {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
@@ -144,4 +144,21 @@ a:hover {
 :focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
+}
+
+
+
+
+.section-index ul {
+  list-style: none;
+}
+
+
+.section-index a {
+  text-decoration: none;
+  color: var(--accent-secondary);
+}
+
+.section-index a:hover {
+  text-decoration: underline;
 }

@@ -4,6 +4,7 @@ import "../style/style.css";
 import ImgGuide from "../components/ImgGuide.tsx";
 import Header from "../components/Header.tsx";
 import Note from "../components/Note.tsx";
+import SectionMapAuto from "../components/SectionMap.tsx";
 
 export default function FolderScreen() {
     return (
@@ -11,6 +12,7 @@ export default function FolderScreen() {
         <Header/>
         <main>
         <h2>UI Structure and function</h2>
+        <SectionMapAuto/>
         <section>
             <h3>Sorting methods</h3>
             <p>Once we open the app, we will see the following screen:</p>
@@ -48,6 +50,7 @@ export default function FolderScreen() {
             <p>One we are done configuring the other parameters, we can now click the "Proceed button". The app will first check that the input parameters are valid. We can get an error message in case any of them are wrong.</p>
             <ImgGuide alt="Error prompt example" caption="In this case, the destination folder route is not a valid path" path="FolderScreen/error.png"/>
             <p>Although uncommon, a similar messages will show up in case anything goes wrong in the copying process itself.</p>
+            <Note title="What happens after clicking proceed?" content="Check out the next section: " children={<a>Interpreting the results</a>}/>
         </section>
         </main>
         </>
