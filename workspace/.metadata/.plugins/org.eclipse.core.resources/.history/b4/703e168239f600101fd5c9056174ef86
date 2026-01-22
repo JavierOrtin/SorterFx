@@ -1,0 +1,97 @@
+package uifx;
+
+import javafx.application.Application;
+import javafx.concurrent.Task;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import model.FileFetcher;
+import model.SearchDTO;
+import service.SorterManager;
+
+
+public class Main extends Application {
+	public static int MIN_WINDOW_HEIGHT = 350;
+	public static int MIN_WINDOW_WIDTH = 770;
+
+	private StackPane root;
+	private int lastIndex;
+	
+	private SorterManager manager;
+	
+	private FolderScreen folderScreen;
+	private WaitingScreen waitingScreen;
+
+	
+	public SorterManager getManager() {
+		return this.manager;
+	}
+	
+    @Override
+    public void start(Stage stage) {
+    	this.manager = SorterManager.fetchManager();
+    	
+    	stage.setOnCloseRequest(event -> closingOperation());
+    	stage.setHeight(MIN_WINDOW_HEIGHT);
+    	stage.setMinHeight(MIN_WINDOW_HEIGHT);
+    	stage.setMinWidth(MIN_WINDOW_WIDTH);
+    	stage.setWidth(MIN_WINDOW_WIDTH);    	
+    	
+    	root = new StackPane();
+    	this.folderScreen = new FolderScreen(this, stage);
+    	root.getChildren().addAll(folderScreen);
+    	
+    	Scene scene = new Scene(root);
+    	scene.getStylesheets().add(
+    		    getClass().getResource("/css/style.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    private void showIndex(int index) {
+    	root.getChildren().get(index).setVisible(true);    	
+    	root.getChildren().get(lastIndex).setVisible(false);
+    	this.lastIndex = index;
+    }
+    
+    private void closingOperation() {
+    	if(root.getChildren().get(0).isVisible()) folderScreen.saveFolderConfig();
+    	manager.saveConfig();
+    }
+    
+    void proceed(WaitingScreen waitingScreen) {
+    	root.getChildren().addAll((this.waitingScreen = waitingScreen));    	
+    	showIndex(1);
+    	
+    	Task<SearchDTO> searchTask = new Task<>() {
+    	    @Override
+    	    protected SearchDTO call() {
+    	        return manager.proceed(file -> {
+    	            // Comunicación segura con la UI
+    	            updateMessage(file.getPath());
+    	        });
+    	    }
+    	};
+    	
+    	searchTask.setOnSucceeded(event -> {
+    	    SearchDTO result = searchTask.getValue();
+    	    System.out.println("");
+    	});
+
+    	searchTask.setOnFailed(event -> {
+    	    root.getChildren().remove(waitingScreen);
+    	    // Opcional: mostrar mensaje de error
+    	    Label errorLabel = new Label("Error: " + searchTask.getException().getMessage());
+    	    root.getChildren().add(errorLabel);
+    	});
+    	
+    	new Thread(searchTask).start();
+    }
+    
+    
+}

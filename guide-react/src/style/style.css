@@ -1,0 +1,147 @@
+/* style.css */
+
+:root {
+  /* Base dark */
+  --bg-main: #0f1411;
+  --bg-surface: #161d18;
+  --bg-elevated: #1d2620;
+
+  /* Jungle-inspired palette */
+  --green-deep: #1f3d2b;
+  --green-soft: #2f5e46;
+  --brown-muted: #3a2f26;
+
+  /* Accents */
+  --accent-primary: #6cff9a;   /* fosforito controlado */
+  --accent-secondary: #8fbfa3;
+
+  /* Text */
+  --text-main: #e6ece8;
+  --text-muted: #aab7af;
+  --text-soft: #8c9a92;
+
+  /* Borders & separators */
+  --border-subtle: #26332b;
+
+  /* Typography */
+  --font-main: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+body {
+  background: linear-gradient(
+    90deg,
+    var(--brown-muted) 0%,
+    #312b25 20%,
+    var(--brown-muted) 50%,
+    #3d362e 80%,
+    var(--brown-muted) 100%
+  );
+  color: var(--text-main);
+  font-family: var(--font-main);
+  line-height: 1.6;
+}
+
+main {
+    background-color: var(--bg-main);
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px var(--border-subtle),
+              0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Header */
+header {
+  background: linear-gradient(
+    180deg,
+    var(--bg-elevated),
+    var(--bg-main)
+  );
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Headings */
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--accent-secondary);
+}
+
+/* Text */
+p {
+  color: var(--text-muted);
+}
+
+strong {
+  color: var(--text-main);
+}
+
+/* Definition lists */
+dt, p.note-title {
+  font-weight: 500;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+dd, p.note {
+  color: var(--text-muted);
+  border-left: 2px solid var(--green-deep);
+  padding-left: 0.75rem;
+}
+
+/* Sections */
+section {
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border-subtle);  
+}
+
+section:last-of-type {
+  border-bottom: none;
+}
+
+/* Images & guides */
+figure {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+figure img {
+  border-radius: 4px;
+}
+
+figcaption {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+/* Links (if any appear later) */
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Focus states – subtle nod to the app’s highlights */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}

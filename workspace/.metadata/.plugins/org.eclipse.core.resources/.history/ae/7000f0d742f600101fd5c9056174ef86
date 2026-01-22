@@ -1,0 +1,47 @@
+package uifx;
+
+import java.util.Collection;
+
+import javafx.collections.FXCollections;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import model.SearchDTO;
+
+public class ResultsScreen extends TabPane {
+	
+	private Main main;
+	
+	public ResultsScreen(Main main, SearchDTO dto) {
+		super();
+		this.main = main;
+		getTabs().addAll(
+	            createTab(
+	                "Matches", 
+	                "tab-match", 
+	                dto.getMatches()
+	            ),
+	            createTab(
+	                "Errors",  
+	                "tab-error", 
+	                dto.getErrors()
+	            ),
+	            createTab(
+	                "Left out", 
+	                "tab-left-out", 
+	                dto.getLeftOut()
+	            )
+	        );
+	}
+	
+	
+	private <T> Tab createTab(String title, String styleClass, Collection<T> items) {
+		Tab tab = new Tab(String.format("%s (%d)", title, items.size()));
+		tab.setClosable(false);
+		tab.getStyleClass().add(styleClass);
+		
+		ListView<T> view = new ListView<T>(FXCollections.observableArrayList(items));
+		tab.setContent(view);
+		return tab;
+	}
+}

@@ -1,0 +1,36 @@
+package uifx;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+public class Main extends Application {
+
+	private StackPane root;
+	private int lastIndex;
+	
+    @Override
+    public void start(Stage stage) {
+    	root = new StackPane();
+    	FolderScreen screen1 = new FolderScreen(stage);
+    	
+    	Scene scene = new Scene(root);
+    	showIndex(0);
+    	scene.getStylesheets().add(
+    		    getClass().getResource("/css/style.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    private void showIndex(int index) {
+    	root.getChildren().get(index).setVisible(true);    	
+    	root.getChildren().get(lastIndex).setVisible(false);
+    	this.lastIndex = index;
+    }
+}

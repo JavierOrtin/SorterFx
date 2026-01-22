@@ -1,0 +1,12 @@
+INDEX VERSION 1.131+D:\CMD-Propias\Photo-sorter\SorterFx\workspace\.metadata\.plugins\org.eclipse.jdt.core
+3683521742.index
+1039150754.index
+1323178036.index
+3134281109.index
+3888272431.index
+333405944.index
+1865797976.index
+1019000429.index
+1489515357.index
+2572075699.index
+3988136291.index

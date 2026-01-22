@@ -1,0 +1,122 @@
+package uifx;
+
+import java.io.File;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+
+
+public class FolderScreen extends BorderPane {
+	
+	private Stage mainStage;
+	private Main main;
+	
+	private TextField sourceField = new TextField();
+	private TextField targetField = new TextField();
+
+    public FolderScreen(Main main, Stage mainStage) {
+    	this.main = main;
+    	this.mainStage = mainStage;
+	
+	    VBox centerBox = new VBox(15);
+	    centerBox.setPadding(new Insets(20));
+	    centerBox.setAlignment(Pos.CENTER);
+	    
+	    HBox row1 = createPathRow(this.main.getManager().getSourceFolder(), "Select source folder...", sourceField);
+	    HBox row2 = createPathRow(this.main.getManager().getTargetFolder(), "Select destination folder...", targetField);
+	    
+	    Region spacer = new Region();
+	    
+	    Button proceedButton = new Button("Proceed");
+	    BorderPane.setMargin(proceedButton, new Insets(10, 0, 20, 0));
+	    BorderPane.setAlignment(proceedButton, Pos.CENTER);
+	    
+	    centerBox.getChildren().addAll(row1, row2,spacer, proceedButton);
+	    
+	    setCenter(centerBox);	
+	    getStyleClass().add("path-selector-panel");
+	}
+	
+	private VBox createPathRow(String initialText, String suggestion, TextField field) {
+		
+		
+		
+	    field.setText(initialText == null ? "" : initialText);
+	    field.setPromptText(suggestion);
+	    field.setEditable(true);
+	
+	    Button selectButton = new Button("Select folder");
+	    
+	    SelectFolderButtonClickFX handler =
+	            new SelectFolderButtonClickFX(field, suggestion);
+
+	    selectButton.setOnAction(e -> handler.handle());
+	
+        HBox row = new HBox(10);
+        row.setAlignment(Pos.CENTER);
+
+        /* Agranda el campo de texto en lugar del botón */
+        HBox.setHgrow(field, Priority.ALWAYS);
+
+        row.getChildren().addAll(field, selectButton);
+        
+        VBox column = new VBox(10);
+        column.setAlignment(Pos.CENTER);
+        Label label = new Label(suggestion);
+        column.getChildren().addAll(label,row);
+        return column;
+	}
+	
+	private class SelectFolderButtonClickFX {
+
+	    private final TextField textField;
+	    private final String suggestion;
+
+	    public SelectFolderButtonClickFX(TextField textField, String suggestion) {
+	        this.textField = textField;
+	        this.suggestion = suggestion;
+	    }
+
+	    public void handle() {
+
+	        DirectoryChooser chooser = new DirectoryChooser();
+	        chooser.setTitle(suggestion);
+
+	        File current = new File(textField.getText());
+
+	        chooser.setInitialDirectory(
+	                (current.exists() && current.isDirectory()) ?
+	                        current : recursiveParent(current)
+	        );
+
+	        File selected = chooser.showDialog(mainStage);
+
+	        if (selected != null) {
+	            textField.setText(selected.getAbsolutePath());
+	        }
+	    }
+
+	    private File recursiveParent(File file) {
+	        try {
+	            File parent = file.getParentFile();
+	            if (parent == null) return null;
+	            if (parent.exists()) return parent;
+	            return recursiveParent(parent);
+	        } catch (NullPointerException e) {
+	            return null;
+	        }
+	    }
+	}
+}
+
+    

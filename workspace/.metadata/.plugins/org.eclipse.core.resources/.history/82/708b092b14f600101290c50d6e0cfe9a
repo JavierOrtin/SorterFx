@@ -1,0 +1,147 @@
+package uifx;
+
+import java.io.File;
+import java.util.Arrays;
+
+import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import model.SortingMode;
+
+
+public class FolderScreen extends BorderPane {
+	
+	private Stage mainStage;
+	private Main main;
+	
+	private TextField sourceField = new TextField();
+	private TextField targetField = new TextField();
+	private CheckBox recursiveCheckBox = new CheckBox("Recursive");
+	private ComboBox<SortingMode> modeCombo = new ComboBox<SortingMode>(FXCollections.observableArrayList(SortingMode.values()));
+
+    public FolderScreen(Main main, Stage mainStage) {
+    	this.main = main;
+    	this.mainStage = mainStage;
+	
+	    VBox centerBox = new VBox(10);
+	    centerBox.setPadding(new Insets(20));
+	    centerBox.setAlignment(Pos.CENTER);
+	    
+	    VBox row1 = createPathRow(this.main.getManager().getSourceFolder(), "Select source folder", sourceField);
+	    VBox row2 = createPathRow(this.main.getManager().getTargetFolder(), "Select destination folder", targetField);
+	    
+	    Region spacer = new Region();
+	    
+	    centerBox.getChildren().addAll(topBox(), row1, row2,spacer, bottomBox());
+	    
+	    setCenter(centerBox);	
+	    getStyleClass().add("path-selector-panel");
+	}
+	
+    private HBox bottomBox() {
+    	Button proceedButton = new Button("Proceed");
+	    
+	    BorderPane.setAlignment(proceedButton, Pos.CENTER);
+	    HBox box = new HBox(35);
+	    box.setAlignment(Pos.CENTER);
+	    
+	    recursiveCheckBox.setSelected(main.getManager().isRecursive());
+	    
+	    box.getChildren().addAll(recursiveCheckBox, proceedButton);
+	    return box;
+    }
+    
+    private HBox topBox() {
+    	SortingMode mode = main.getManager().getSortingMode();
+    	this.modeCombo.getSelectionModel().select(mode == null ? 0 : mode.ordinal());
+    	
+    	HBox box = new HBox(10);
+    	box.getChildren().addAll(this.modeCombo);
+    	return box;
+    }
+    
+	private VBox createPathRow(String initialText, String suggestion, TextField field) {
+		
+	    field.setText(initialText == null ? "" : initialText);
+	    field.setPromptText(suggestion + "...");
+	    field.setEditable(true);
+	
+	    Button selectButton = new Button("Select folder");
+	    
+	    SelectFolderButtonClickFX handler =
+	            new SelectFolderButtonClickFX(field, suggestion);
+
+	    selectButton.setOnAction(e -> handler.handle());
+	
+        HBox row = new HBox(7);
+        row.setAlignment(Pos.CENTER);
+
+        /* Agranda el campo de texto en lugar del botón */
+        HBox.setHgrow(field, Priority.ALWAYS);
+
+        row.getChildren().addAll(field, selectButton);
+        
+        VBox column = new VBox(10);
+        // top, right, bottom, left
+        column.setPadding(new Insets(0,0,20,0));
+        column.setAlignment(Pos.CENTER_LEFT);
+        Label label = new Label(suggestion + ":");
+        column.getChildren().addAll(label,row);
+        return column;
+	}
+	
+	private class SelectFolderButtonClickFX {
+
+	    private final TextField textField;
+	    private final String suggestion;
+
+	    public SelectFolderButtonClickFX(TextField textField, String suggestion) {
+	        this.textField = textField;
+	        this.suggestion = suggestion;
+	    }
+
+	    public void handle() {
+
+	        DirectoryChooser chooser = new DirectoryChooser();
+	        chooser.setTitle(suggestion);
+
+	        File current = new File(textField.getText());
+
+	        chooser.setInitialDirectory(
+	                (current.exists() && current.isDirectory()) ?
+	                        current : recursiveParent(current)
+	        );
+
+	        File selected = chooser.showDialog(mainStage);
+
+	        if (selected != null) {
+	            textField.setText(selected.getAbsolutePath());
+	        }
+	    }
+
+	    private File recursiveParent(File file) {
+	        try {
+	            File parent = file.getParentFile();
+	            if (parent == null) return null;
+	            if (parent.exists()) return parent;
+	            return recursiveParent(parent);
+	        } catch (NullPointerException e) {
+	            return null;
+	        }
+	    }
+	}
+}
+
+    

@@ -1,0 +1,49 @@
+package uifx;
+
+import java.io.File;
+
+import javafx.collections.FXCollections;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import model.Match;
+import model.SearchDTO;
+import model.Error;
+
+public class ResultsScreen extends TabPane {
+	
+	private Main main;
+	
+	public ResultsScreen(Main main, SearchDTO dto) {
+		super();
+		this.main = main;
+		getTabs().addAll(getMatchTab(dto),getErrorTab(dto),getErrorTab(dto));
+	}
+	
+	private Tab getMatchTab(SearchDTO dto) {
+		Tab tab = new Tab(String.format("Matches (%d)", dto.getNumMatches()));
+		tab.getStyleClass().add("tab-match");
+		
+		ListView<Match> view = new ListView<Match>(FXCollections.observableArrayList(dto.getMatches()));
+		tab.setContent(view);
+		return tab;
+	}
+	
+	private Tab getErrorTab(SearchDTO dto) {
+		Tab tab = new Tab(String.format("Matches (%d)", dto.getNumMatches()));
+		tab.getStyleClass().add("tab-error");
+		
+		ListView<Error> view = new ListView<Error>(FXCollections.observableArrayList(dto.getErrors()));
+		tab.setContent(view);
+		return tab;
+	}
+	
+	private Tab getLeftOutTab(SearchDTO dto) {
+		Tab tab = new Tab(String.format("Matches (%d)", dto.getNumMatches()));
+		tab.getStyleClass().add("tab-left-out");
+		
+		ListView<File> view = new ListView<File>(FXCollections.observableArrayList(dto.getLeftOut()));
+		tab.setContent(view);
+		return tab;
+	}
+}

@@ -1,0 +1,41 @@
+package uifx.cells;
+
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import model.Match;
+
+public class MatchCell extends ListCell<Match> {
+
+    private final Label pathLabel = new Label();
+    private final Label dateLabel = new Label();
+    private final HBox container = new HBox(10);
+
+    public MatchCell() {
+        HBox.setHgrow(pathLabel, Priority.ALWAYS);
+        pathLabel.setMaxWidth(Double.MAX_VALUE);
+        dateLabel.getStyleClass().add("match-date");
+
+        container.getChildren().addAll(pathLabel, dateLabel);
+    }
+
+    @Override
+    protected void updateItem(Match item, boolean empty) {
+        super.updateItem(item, empty);
+
+        if (empty || item == null) {
+            setText(null);
+            setGraphic(null);
+        } else {
+            pathLabel.setText(item.getFile().getPath());
+            dateLabel.setText(
+                String.format("%s-%s-%s",
+                    item.getDay(),
+                    item.getMonth(),
+                    item.getYear())
+            );
+            setGraphic(container);
+        }
+    }
+}

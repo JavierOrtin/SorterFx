@@ -1,0 +1,56 @@
+package uifx;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import service.SorterManager;
+
+
+public class Main extends Application {
+	public static int MIN_WINDOW_HEIGHT = 350;
+	public static int MIN_WINDOW_WIDTH = 770;
+
+	private StackPane root;
+	private int lastIndex;
+	
+	private SorterManager manager;
+
+	
+	public SorterManager getManager() {
+		return this.manager;
+	}
+	
+    @Override
+    public void start(Stage stage) {
+    	this.manager = SorterManager.fetchManager();
+    	
+    	/* TODO evento de cierre. Cambiar*/
+    	stage.setOnCloseRequest(event -> System.out.println("Adiós"));
+    	stage.setHeight(MIN_WINDOW_HEIGHT);
+    	stage.setMinHeight(MIN_WINDOW_HEIGHT);
+    	stage.setMinWidth(MIN_WINDOW_WIDTH);
+    	stage.setWidth(MIN_WINDOW_WIDTH);    	
+    	
+    	root = new StackPane();
+    	FolderScreen screen1 = new FolderScreen(this, stage);
+    	root.getChildren().addAll(screen1);
+    	
+    	Scene scene = new Scene(root);
+    	scene.getStylesheets().add(
+    		    getClass().getResource("/css/style.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    private void showIndex(int index) {
+    	root.getChildren().get(index).setVisible(true);    	
+    	root.getChildren().get(lastIndex).setVisible(false);
+    	this.lastIndex = index;
+    }
+}

@@ -1,0 +1,16 @@
+package uifx.util;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+public class PromptUtil {
+	
+	public static void exceptionPrompt(Throwable e) {
+		Alert alert = new Alert(AlertType.ERROR);
+	    alert.setTitle("Error");
+	    alert.setHeaderText("Something went wrong");
+	    alert.setContentText(e.getMessage());
+
+	    alert.showAndWait();
+	}
+}

@@ -1,0 +1,26 @@
+package uifx;
+
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import model.Match;
+import model.SearchDTO;
+
+public class ResultsScreen extends TabPane {
+	
+	private Main main;
+	
+	public ResultsScreen(Main main, SearchDTO dto) {
+		this.main = main;
+		
+	}
+	
+	private Tab getMatchTab(SearchDTO dto) {
+		Tab tab = new Tab(String.format("Matches (%d)", dto.getNumMatches()));
+		tab.getStyleClass().add("tab-matches");
+		
+		ListView<Match> view = new ListView<Match>();
+		
+		return tab;
+	}
+}

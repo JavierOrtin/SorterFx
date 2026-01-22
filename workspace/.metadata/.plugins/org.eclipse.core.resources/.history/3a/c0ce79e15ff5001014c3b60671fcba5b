@@ -1,0 +1,11 @@
+package uifx;
+
+import javafx.stage.Stage;
+
+public class MainWindow extends Stage {
+	
+	public MainWindow() {
+		new FolderScreen(this);
+	}
+
+}

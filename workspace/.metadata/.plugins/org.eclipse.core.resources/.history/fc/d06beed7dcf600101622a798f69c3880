@@ -1,0 +1,104 @@
+package ui;
+
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.io.File;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import service.interf.UpdateReflect;
+import ui.UIConfig.ColorConfig;
+import ui.util.ScaleUtil;
+
+public class WaitingPanel extends JPanel implements UpdateReflect {
+
+
+	private static final long serialVersionUID = 1L;
+
+	private MainWindow mainWindow;
+
+	private JPanel northPanel;
+
+	private JLabel waitingLabel;
+
+	private JPanel centerPanel;
+
+	private JLabel processingLabel;
+
+	private JLabel currentFileLabel;
+	
+	
+	public WaitingPanel(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+		
+		setLayout(new BorderLayout());
+		add(getNorthPanel(), BorderLayout.NORTH);
+		add(getCenterPanel(), BorderLayout.CENTER);
+	}
+	
+	private JPanel getNorthPanel() {
+		if(this.northPanel == null) {
+			northPanel = new JPanel();
+			northPanel.setBackground(this.mainWindow.getUIConfig().getColor(ColorConfig.BACKGROUND));
+			northPanel.add(getWaitingLabel());
+		}
+		return this.northPanel;
+	}
+	
+	private JLabel getWaitingLabel() {
+		if(this.waitingLabel == null) {
+			this.waitingLabel = new JLabel("Wait, file procesing in progress...");
+			waitingLabel.setFont(new Font("Helvetica", Font.BOLD, 20));
+			waitingLabel.setForeground(mainWindow.getUIConfig().getColor(ColorConfig.FONT));
+		}
+		return this.waitingLabel;
+	}
+	
+	private JPanel getCenterPanel() {
+		if(this.centerPanel == null) {
+			this.centerPanel = new JPanel(new GridBagLayout());
+			centerPanel.setBackground(mainWindow.getUIConfig().getColor(ColorConfig.BACKGROUND));
+			
+			GridBagConstraints gbc1 = ScaleUtil.gridConstraints(0, 0, 1, 1);
+			gbc1.anchor = GridBagConstraints.SOUTH;
+			centerPanel.add(getProcessingLabel(), gbc1);
+			
+						
+			GridBagConstraints gbc2 = ScaleUtil.gridConstraints(0, 2, 1, 1);
+			gbc2.anchor = GridBagConstraints.NORTH;
+			centerPanel.add(getCurrentFileLabel(), gbc2);
+			
+			
+		}
+		return this.centerPanel;
+	}
+	
+	private JLabel getProcessingLabel() {
+		if(this.processingLabel == null) {
+			this.processingLabel = new JLabel("Currently processing:");
+			this.processingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			this.processingLabel.setForeground(mainWindow.getUIConfig().getColor(ColorConfig.FONT));
+		}
+		return this.processingLabel;
+	}
+	
+	private JLabel getCurrentFileLabel() {
+		if(this.currentFileLabel == null) {
+			this.currentFileLabel = new JLabel();
+			this.currentFileLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			this.currentFileLabel.setForeground(mainWindow.getUIConfig().getColor(ColorConfig.FONT));
+		}
+		return this.currentFileLabel;
+	}
+
+	
+	@Override
+	public void updateStatus(File file) {
+		getCurrentFileLabel().setText(file.getPath());
+	}
+
+}

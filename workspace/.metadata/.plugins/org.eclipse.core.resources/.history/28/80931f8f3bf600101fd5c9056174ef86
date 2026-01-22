@@ -1,0 +1,10 @@
+package uifx;
+
+import javafx.scene.control.TabPane;
+
+public class ResultsScreen extends TabPane {
+	
+	public ResultsScreen() {
+		;
+	}
+}

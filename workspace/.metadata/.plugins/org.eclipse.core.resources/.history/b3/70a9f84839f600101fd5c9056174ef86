@@ -1,0 +1,25 @@
+package uifx;
+
+import java.io.File;
+
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import service.interf.UpdateReflect;
+
+public class WaitingScreen extends BorderPane implements UpdateReflect{
+
+	private Label fileLabel = new Label();
+
+	@Override
+	public void updateStatus(File file) {
+		fileLabel.setText(file.getPath());
+	}
+	
+	public WaitingScreen() {
+		Label titleLabel = new Label("Fetching matching pictures...");		
+		VBox box = new VBox(10);
+		box.getChildren().addAll(titleLabel, fileLabel);
+		setCenter(box);
+	}
+}
